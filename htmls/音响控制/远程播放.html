@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传文件</title>
+    <style>
+        .center {
+            border-radius: 20px;
+            width: 400px;
+            height: 320px;
+            background-color: white;
+            padding: 20px;
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            /* 相对于现在所处位置的位移变化，x便偏移自己宽度的50%，y偏移自己高度的50% */
+    } 
+    </style>
+
+</head>
+<body background="image/bg.png" style=" background-repeat:no-repeat ;background-size:100% 100%;
+    background-attachment: fixed;">
+    <div>
+        <div style="color: #f0f0f0">
+            使用方法:<br>
+            1.确保已登录且是管理员身份<br>
+            2.上传音乐文件（局域网上传）<br>
+            3.输入文件名称并点击播放即可开启远程播放（可通过互联网）
+        </div>
+       <div class="center">
+           <form method="post" action="http://192.168.2.111:8080/music/upload" enctype="multipart/form-data" target="blank">
+               <h1>请上传音乐文件<input type="file" name="file" required><br></h1>
+               <input type="submit" value="上传" required>
+               <hr>
+           </form>
+            <input id="songname" type="text" placeholder="输入音乐文件名" name="name">
+            <button onclick="play()">播放</button>
+       </div>
+    </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        function play () {
+            var name = document.getElementById('songname').value
+            axios.get("http://gwctech.cn/music/play?name="+name)
+            .then(function (response) {
+                if (response.data.result) {
+                    alert("播放成功")
+                } else {
+                    if(response.data.message == "您不是管理员身份，无法进行播放操作") {
+                        alert("您不是管理员身份，无法进行播放操作")
+                    } else if (response.data.message == "暂未登录") {
+                        alert("暂未登录")
+                    }
+                }
+            })
+            .catch(function (error) {
+                
+            });
+        }
+    </script>
+</body>
+</html>
